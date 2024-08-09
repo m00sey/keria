@@ -56,12 +56,22 @@ def fix(tymth, tock=0.0, **opts):
         except kering.DatabaseError:
             return -1
 
+        # fix eans
         to_delete = []
         for k, v in db.eans.getItemIter():
             if db.rpys.get(keys=(v.qb64,)) is None:
                 to_delete.append(k)
 
         print(f"Removing {to_delete}")
-
         for k in to_delete:
             db.eans.rem(k)
+
+        # fix ends
+        to_delete = []
+        for k, v in db.ends.getItemIter():
+            if db.eans.get(keys=k) is None:
+                to_delete.append(k)
+
+        print(f"Removing {to_delete}")
+        for k in to_delete:
+            db.ends.rem(k)
